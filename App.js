@@ -13,11 +13,7 @@ const App = () => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    if (email && password) {
-      Alert.alert("Login", `Email: ${email}, Password: ${password}`);
-    } else {
-      Alert.alert("Erro", "Por favor, preencha todos os campos.");
-    }
+    //TODO:
   };
 
   return (
