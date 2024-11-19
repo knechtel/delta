@@ -1,84 +1,83 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import React from "react";
+import { View, Text } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import LoginScreen from "./component/LoginScreen";
+import ClientList from "./component/ClientList";
+import FormClient from "./component/FormClient";
+import About from "./component/About";
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-const App = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = () => {
-    //TODO:
-  };
-
+function BottomNavegator() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Eletrônica Delta</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#999"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
+    <Tab.Navigator
+      initialRouteName="Clientes"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          if (route.name === "FormClient") {
+            iconName = "home";
+            return <Icon name={iconName} color={color} size={size} />;
+          } else if (route.name === "Clientes") {
+            iconName = "view-dashboard";
+          } else {
+            iconName = "login";
+          }
+          return <Icon name={iconName} color={color} size={size} />;
+        },
+      })}
+    >
+      <Tab.Screen
+        name="FormClient1"
+        component={FormClient}
+        options={{
+          title: "Cliente",
+          tabBarLabel: "Cadastro de Cliente",
+        }}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        placeholderTextColor="#999"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
+      <Tab.Screen
+        name="Clientes"
+        component={ClientList}
+        options={{
+          tabBarLabel: "Clientes",
+        }}
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
-    </View>
+      <Tab.Screen
+        name="Sobre"
+        component={About}
+        options={{
+          tabBarLabel: "Sobre",
+        }}
+      />
+    </Tab.Navigator>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-    justifyContent: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#333",
-    textAlign: "center",
-    marginBottom: 40,
-  },
-  input: {
-    height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-    fontSize: 16,
-    borderColor: "#ccc",
-    borderWidth: 1,
-  },
-  button: {
-    backgroundColor: "#6A0DAD", // Cor roxa
-    height: 50,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
-
-export default App;
+}
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="LoginScreen">
+        {/* Tela de Login sem aba */}
+        <Stack.Screen
+          name="FormClient"
+          component={FormClient}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Client"
+          component={ClientList}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Tela"
+          component={BottomNavegator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
