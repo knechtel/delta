@@ -5,7 +5,7 @@ import {
   PermissionStatus,
 } from "expo-image-picker";
 import { useState } from "react";
-
+import axios from "axios";
 import { Colors } from "../constants/colors";
 import OutlinedButton from "../UI/OutlinedButton";
 //import { Button } from "react-native-paper";
@@ -15,6 +15,32 @@ function ImagePicker() {
 
   const [cameraPermissionInformation, requestPermission] =
     useCameraPermissions();
+
+  const sendToServer = async () => {
+    try {
+      // Criar um FormData para enviar o arquivo
+      const formData = new FormData();
+
+      // Adicionar o arquivo ao FormData
+      formData.append("file", {
+        uri: pickedImage, // Caminho do arquivo local (deve começar com file:// para iOS/Android)
+        name: "arquivo.jpg", // Nome do arquivo
+        type: "image/jpeg", // Tipo MIME do arquivo
+      });
+
+      // Configurar cabeçalhos
+      const headers = {
+        "Content-Type": "multipart/form-data",
+      };
+
+      // Fazer a requisição POST para enviar o arquivo
+      const response = await axios.post("url.Servidor", formData, { headers });
+
+      console.log("Resposta do servidor:", response.data);
+    } catch (error) {
+      console.error("Erro ao enviar arquivo:", error.message);
+    }
+  };
 
   async function verifyPermissions() {
     if (cameraPermissionInformation.status === PermissionStatus.UNDETERMINED) {
@@ -35,7 +61,6 @@ function ImagePicker() {
   }
 
   async function takeImageHandler() {
-    console.log("Antoni");
     const hasPermission = await verifyPermissions();
 
     if (!hasPermission) {
@@ -47,12 +72,11 @@ function ImagePicker() {
       aspect: [16, 9],
       quality: 0.5,
     });
-    console.log("log()()");
-    var test = image;
 
-    console.log(test.assets[0].uri);
-    console.log("log");
-    setPickedImage(test.assets[0].uri);
+    var result = image;
+    console.log(result.assets[0].uri);
+
+    setPickedImage(result.assets[0].uri);
   }
 
   let imagePreview = <Text>No image taken yet.</Text>;
@@ -67,7 +91,7 @@ function ImagePicker() {
       <OutlinedButton icon="camera" onPress={takeImageHandler}>
         Take Image
       </OutlinedButton>
-      <Button title="Enviar" />
+      <Button title="Enviar" onPress={sendToServer} />
     </View>
   );
 }
