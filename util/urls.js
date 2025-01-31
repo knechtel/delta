@@ -1,5 +1,5 @@
-export const LOCAL =
-  "http://ec2-52-67-56-229.sa-east-1.compute.amazonaws.com:8080";
+export const LOCAL = "http://localhost:8080";
+//  "http://ec2-52-67-56-229.sa-east-1.compute.amazonaws.com:8080";
 
 export const FIND_ALL_CLIENT = LOCAL + "/client-findAll";
 export const FIND_BY_ID_CLIENT = LOCAL + "/client-findById";
